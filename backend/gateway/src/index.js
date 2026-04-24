@@ -3,6 +3,7 @@ const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
+const errorHandler = require('./middleware/error.middleware');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -29,7 +30,8 @@ app.get('/health', (req,res) => {
     });
 });
 
-
+// global error middlware
+app.use(errorHandler);
 
 app.listen(PORT, () => {
     console.log(`api gateway is running on http://localhost:${PORT}`);
