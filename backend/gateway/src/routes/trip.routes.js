@@ -6,14 +6,16 @@ const tripServiceUrl = process.env.TRIP_SERVICE_URL;
 const router = express.Router();
 
 const tripProxy = createProxyMiddleware({
-    tripServiceUrl,
+    target: tripServiceUrl,
     changeOrigin: true,
     pathRewrite: {
         '^/api/trip': '' //remove the prefix /api/auth from the request url before forwading it
     },
-    onError: (err,req,res) => {
+    on: (err,req,res) => {
         console.error('trip service proxy error', err);
-        throw new AppError('Trip service unavaliable at the moment !', 503);
+        res.status(503).json({
+            message: 'Trip service unavaliable at the moment !'
+        });
     }
 });
 

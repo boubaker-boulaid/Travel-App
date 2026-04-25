@@ -6,14 +6,16 @@ const router = express.Router();
 const authServiceUrl = process.env.AUTH_SERVICE_URL; //get the target url
 
 const authProxy = createProxyMiddleware({
-    authServiceUrl,
+    target: authServiceUrl,
     changeOrigin: true,
     pathRewrite: {
         '^/api/auth': '' //remove the prefix /api/auth from the request url before forwading it
     },
-    onError: (err, req, res) => {
+    on: (err, req, res) => {
         console.error('auth service proxy error', err);
-        throw new AppError('Auth service unavaliable at the moment', 503);
+        res.status(503).json({
+            message: 'Auth service unavaliable at the moment'
+        });
     }
 })
 
